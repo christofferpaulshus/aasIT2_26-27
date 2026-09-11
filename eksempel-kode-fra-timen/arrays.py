@@ -13,3 +13,6 @@ print(numbers)
 print(numbers.index(30))
 
 print(type(list(numbers)))
+
+partall = [tall + 2 for tall in range(20) if not tall % 2]
+print(partall)
