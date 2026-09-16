@@ -1,9 +1,9 @@
 # capitalize string
 # if input is multi-word, then return a list over all words
-def f(input_string: str):
+def f(text = str(input("skriv en tekst:\n"))):
 	array = []
 	word = ""
-	text = input_string.upper();
+	text = text.upper()
 
 	for i in range(len(text)):
 		if text[i] == ' ': 
@@ -17,5 +17,5 @@ def f(input_string: str):
 
 	return array
 
-words = f("hello world")
+words = f()
 print(words)
