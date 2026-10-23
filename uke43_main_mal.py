@@ -1,19 +1,26 @@
+import os
+
 import pygame as pg
 
 ### SET-UP
 
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 pg.init()
+
 #skjerm
 pg.display.set_caption('IT2 spill-mal')
 WIDTH = 500
 HEIGHT = 500
 # screen = pg.display.set_mode((0,0),pg.FULLSCREEN)
 screen = pg.display.set_mode((WIDTH,HEIGHT))
+
 #oppdateringsrate
 FPS = 60
 clock = pg.time.Clock()
+
 #hoved-spill-løkke
 run = True
+lose = False
 game_objects = []
 
 
@@ -23,6 +30,11 @@ class GameObject:
     def __init__(self, x_pos=0, y_pos=0, color=(250,0,0)):
         self.x_size = 50    #piksler
         self.y_size = 50    #piksler
+
+        self.img = pg.transform.scale(
+            pg.image.load(
+                'assets/space_invaders_ship.png'),
+            (self.x_size,self.y_size))
 
         self.x_pos = x_pos
         self.y_pos = y_pos
@@ -35,7 +47,12 @@ class GameObject:
 
         self.rect.x = self.x_pos
         self.rect.y = self.y_pos
+        
+        #rect
         pg.draw.rect(screen, self.color, self.rect)
+
+        #image
+        screen.blit(self.img,(self.x_pos,self.y_pos))
 
 
 ### FUNKSJONER
@@ -52,6 +69,12 @@ def actions():
     #player-actions
     if keys[pg.K_d]:
         p1.x_pos += 5
+    if keys[pg.K_a]:
+        p1.x_pos -= 5
+    if keys[pg.K_s]:
+        p1.y_pos += 5
+    if keys[pg.K_w]:
+        p1.y_pos -= 5
 
     #system shutdown
     if keys[pg.K_ESCAPE]:
@@ -71,12 +94,19 @@ def draw():
 
     pg.display.update()
 
+def win_con():
+    global lose, p1
+    if p1.rect.colliderect(cpu1):
+        print("collision!")
+        lose = True
+    else:
+        print("no collision")
 
 ### IN-GAME OBJECTS
 
 cpu1 = GameObject(color=(0,250,0))
 
-p1 = GameObject(800,420)
+p1 = GameObject(100,100)
 
 game_objects.append(p1)
 game_objects.append(cpu1)
@@ -88,6 +118,8 @@ while run:
     ai_actions()
     
     actions()
+
+    win_con()
 
     draw()
 
